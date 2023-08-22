@@ -4,7 +4,7 @@
 import hashlib
 import json
 import os
-from wsgiref.simple_server import WSGIServer
+from gevent.pywsgi import WSGIServer
 from data.questions_data import QuestionsData
 from data.types.question import Question
 import routes.v1.get_run
@@ -21,7 +21,7 @@ def main():
     startup()
 
     print("Starting webserver")
-    http_server = WSGIServer(('', 60218), BaseData.app)
+    http_server = WSGIServer(('', 11215), BaseData.app)
     http_server.serve_forever()
 
 def startup():
