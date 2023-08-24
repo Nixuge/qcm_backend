@@ -13,7 +13,9 @@ def new_run():
     if not data:
         return {"success": False, "error": "json not provided"}, 403
     
-    included_themes: list[str] = data["theme"]
+    included_themes: list[str] = data.get("theme", None)
+    if not included_themes:
+        return {"success": False, "error": "themes not provided in the json"}, 403
     question_count: int = data.get("question_count", 10)
         
     run = RunBuilder(
@@ -23,8 +25,8 @@ def new_run():
 
     if (type(run) == str):
         return {"success": False, "error": run}, 500
-
-    RunsManager.add_run(run)
-    return {"success": True, "code": run.uuid, "questions": run.questions}, 200
+    
+    RunsManager.add_run(run) # type: ignore
+    return {"success": True, "code": run.uuid, "questions": run.questions}, 200 # type: ignore
 
     

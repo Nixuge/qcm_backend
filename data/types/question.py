@@ -1,15 +1,12 @@
 from dataclasses import dataclass
 from typing import Self
 
-# Not sure if this is even needed, I could just use the json.
-
 
 @dataclass
 class Answer:
     text: str
     correct: bool
 
-    # Unused for now, just using the json
     @staticmethod
     def from_list(list: dict) -> Self | None:
         if list == None:
@@ -65,9 +62,3 @@ class Question:
             explanation_audio = dict.get("explanation_audio")
         )
 
-
-# Note:
-# The from_dict() prolly wouldn't be useful
-# as when sending I still need to re convert to json.
-# It'd probably only be a bit useful to validate answers,
-# but still very minimal & not even sure it'd benefit.
