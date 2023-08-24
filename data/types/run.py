@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import math
 import random
 from uuid import uuid4
@@ -14,10 +14,9 @@ class Run:
     question_count: int
     questions: list[tuple[str, str]]
     current_question: int
-    # TODO: use the two below to allow free browsing
-    # Also to implement in endpoints
-    revealed_questions: list[int] = []
-    free_browsing: bool = False
+    
+    free_browsing: bool
+    revealed_questions: list[int] = field(default_factory=list)
 
     def can_access(self, index: int) -> bool:
         if self.free_browsing or index == 0:
@@ -39,15 +38,17 @@ class RunBuilder:
     selected_themes: list[str]
     selected_themes_count: int
     question_count: int
+    free_browsing: bool
     _base_question_per_theme: int
     _remaining: int
     _selected_questions: list[tuple[str, str]]
     _remaining_themes: list[str]
 
-    def __init__(self, selected_themes: list[str], question_count: int) -> None:
+    def __init__(self, selected_themes: list[str], question_count: int, free_browsing: bool) -> None:
         self.selected_themes = selected_themes
         self.selected_themes_count = len(selected_themes)
         self.question_count = question_count
+        self.free_browsing = free_browsing
         self._base_question_per_theme = math.floor(self.question_count / self.selected_themes_count)
         self._remaining = self.question_count % self.selected_themes_count
         self._selected_questions = []
@@ -132,5 +133,6 @@ class RunBuilder:
             selected_themes = self.selected_themes,
             question_count = self.question_count,
             questions = self._selected_questions,
-            current_question = 1
+            current_question = 1,
+            free_browsing = self.free_browsing
         )

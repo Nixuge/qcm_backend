@@ -21,5 +21,6 @@ def get_run_data():
     return {
         "success": True,
         "current_question": run.current_question,
-        "question_count": run.question_count
+        "questions": run.questions,
+        "free_browsing": run.free_browsing
     }, 200
