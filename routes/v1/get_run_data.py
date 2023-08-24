@@ -8,15 +8,15 @@ app = BaseData.app
 def get_run_data():
     data: dict = request.get_json(force = True)
     if not data:
-        return {"success": False, "error": "json not provided"}, 403
+        return {"success": False, "error": "json not provided"}, 400
     
     run_uuid: str = data.get("uuid", None)
     if not run_uuid:
-        return {"success": False, "error": "uuid not provided"}, 403
+        return {"success": False, "error": "uuid not provided"}, 400
 
     run = RunsManager.get_run(run_uuid)
     if not run:
-        return {"success": False, "error": "run doesn't exist"}, 403
+        return {"success": False, "error": "run doesn't exist"}, 400
 
     return {
         "success": True,
