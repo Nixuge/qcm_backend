@@ -13,8 +13,22 @@ class Run:
     selected_themes: list[str]
     question_count: int
     questions: list[tuple[str, str]]
-    discovered_questions = list[int]
     current_question: int
+    # TODO: use the two below to allow free browsing
+    # Also to implement in endpoints
+    revealed_questions: list[int] = []
+    free_browsing: bool = False
+
+    def can_access(self, index: int) -> bool:
+        if self.free_browsing or index == 0:
+            return True
+
+        for discovered in self.revealed_questions:
+            if index == discovered or index == discovered + 1:
+                return True
+        return False
+
+
     def get_question_theme(self, index: int):
         return self.questions[index][0]
     def get_question_hash(self, index: int):

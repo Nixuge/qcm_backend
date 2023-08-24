@@ -5,7 +5,7 @@ from data.runs_manager import RunsManager
 
 app = BaseData.app
 
-@app.route("/api/v1/get_question", methods=["GET"])
+@app.route("/api/v1/get_revealed_and_current_question", methods=["GET"])
 def get_question():
     data: dict = request.get_json(force = True)
     if not data:
@@ -32,9 +32,24 @@ def get_question():
 
     run.current_question = question_number
 
-    theme, hash = run.questions[question_number - 1]  #list indexes start at 0
+    revealed_questions: list[dict] = []
+    current_question: dict | None = None
+    
+    # Grab the revealed questions (& if current question in there grab it revaled too)
+    for i in run.revealed_questions:
+        c_theme, c_hash = run.questions[i]
+        if (i - 1 == question_number): 
+            current_question = QuestionsData.questions_dict[c_theme][c_hash].get_dict_full()
+        
+        revealed_questions.append(QuestionsData.questions_dict[c_theme][c_hash].get_dict_full())
+
+    # If current question wasn't grabbed above as revealed, grab it norally
+    if not current_question:
+        theme, hash = run.questions[question_number - 1]
+        current_question = QuestionsData.questions_dict[theme][hash].get_dict_no_full_answer()
 
     return {
         "success": True,
-        "question_data": QuestionsData.questions_dict[theme][hash].get_dict_no_full_answer()
+        "revealed_questions": revealed_questions,
+        "current_question": current_question
     }, 200
