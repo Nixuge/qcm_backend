@@ -12,11 +12,20 @@ class Run:
     uuid: str
     selected_themes: list[str]
     question_count: int
+    # list[("theme", "hash"), ("theme2", "hash2"), ...]
+    # Note: moving to a list[tuple[str, Question]] would be nice to avoid parsing the dict every time,
+    # but a bit more annoying for serialization.
+    # For now this works well enough with a low performance hit, so leaving it be.
     questions: list[tuple[str, str]]
     current_question: int
     
     free_browsing: bool
     revealed_questions: list[int] = field(default_factory=list)
+    answers_submitted: dict[int, dict] = field(default_factory=dict)
+
+    # todo: see question.py#33
+    def add_submitted_answers(self, question_number: int, answers: dict):
+        self.answers_submitted[question_number] = answers
 
     def can_access(self, index: int) -> bool:
         if self.free_browsing or index == 0:

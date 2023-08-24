@@ -28,7 +28,7 @@ def get_question():
         return {"success": False, "error": "question_number higher than the run question count"}, 400
 
     if not run.can_access(question_number - 1):
-        return {"success": False, "error": "tried to access a question number too high"}
+        return {"success": False, "error": "tried to access an inaccessible question number (probably too high)"}, 403
 
     run.current_question = question_number
 
@@ -40,8 +40,8 @@ def get_question():
         c_theme, c_hash = run.questions[i]
         if (i - 1 == question_number): 
             current_question = QuestionsData.questions_dict[c_theme][c_hash].get_dict_full()
-        
-        revealed_questions.append(QuestionsData.questions_dict[c_theme][c_hash].get_dict_full())
+        else:
+            revealed_questions.append(QuestionsData.questions_dict[c_theme][c_hash].get_dict_full())
 
     # If current question wasn't grabbed above as revealed, grab it norally
     if not current_question:
