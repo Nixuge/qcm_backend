@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 import json
 import math
-import os
 import random
 from uuid import uuid4
 
