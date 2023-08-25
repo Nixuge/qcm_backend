@@ -34,7 +34,13 @@ def get_question():
 
     theme, hash = run.questions[question_number - 1]  #list indexes start at 0
 
+    question = QuestionsData.questions_dict[theme][hash]
+    if question_number in run.revealed_questions:
+        question_data = question.get_dict_full()
+    else:
+        question_data = question.get_dict_no_full_answer()
+
     return {
         "success": True,
-        "question_data": QuestionsData.questions_dict[theme][hash].get_dict_no_full_answer()
+        "question_data": question_data
     }, 200

@@ -23,8 +23,8 @@ class Run:
     revealed_questions: list[int] = field(default_factory=list)
     answers_submitted: dict[int, dict] = field(default_factory=dict)
 
-    # todo: see question.py#33
     def add_submitted_answers(self, question_number: int, answers: dict):
+        self.revealed_questions.append(question_number)
         self.answers_submitted[question_number] = answers
 
     def can_access(self, index: int) -> bool:
@@ -32,7 +32,7 @@ class Run:
             return True
 
         for discovered in self.revealed_questions:
-            if index == discovered or index == discovered + 1:
+            if index == discovered or index == discovered:
                 return True
         return False
 

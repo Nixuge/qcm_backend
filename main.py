@@ -3,10 +3,16 @@
 
 import os
 from gevent.pywsgi import WSGIServer
+
+import routes.v1.get_question
+import routes.v1.get_revealed_and_current_question
 import routes.v1.get_run_data
 import routes.v1.get_themes
 import routes.v1.new_run
-import routes.v1.get_question
+import routes.v1.validate_question_get_result
+
+# TODO: have endpoints return better values:
+# for the get_revealed_and_current_quetsions, return which questions have been revealed
 
 
 from data.base_data import BaseData

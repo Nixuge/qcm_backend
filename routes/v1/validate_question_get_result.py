@@ -6,7 +6,7 @@ from data.runs_manager import RunsManager
 app = BaseData.app
 
 @app.route("/api/v1/validate_question_get_result", methods=["GET"])
-def get_question():
+def validate_question_get_result():
     data: dict = request.get_json(force = True)
     if not data:
         return {"success": False, "error": "json not provided"}, 400
@@ -38,11 +38,12 @@ def get_question():
     if not answers:
         return {"success": False, "error": "answers not provided"}, 400
     
+    if question_number in run.revealed_questions:
+        return {"success": False, "error": "question result already submitted"}, 403
+
     answers_new = {}
-    for key in [0, 1, 2]:
+    for key in ["0", "1", "2"]:
         answer = answers.get(key)
-        if not answer:
-            return {"success": False, "error": f"answers.{key} not provided"}, 400
         answers_new[key] = answer
 
     run.current_question = question_number
