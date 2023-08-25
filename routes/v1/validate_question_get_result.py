@@ -52,7 +52,12 @@ def validate_question_get_result():
 
     run.add_submitted_answers(question_number, answers_new)
 
+    finished = run.is_finished()
+    if finished:
+        RunsManager.remove_save_run(run_uuid)
+
     return {
         "success": True,
-        "question_result": QuestionsData.questions_dict[theme][hash].get_answer_only_dict()
+        "question_result": QuestionsData.questions_dict[theme][hash].get_answer_only_dict(),
+        "run_finished": finished
     }, 200

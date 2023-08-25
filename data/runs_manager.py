@@ -5,10 +5,15 @@ class RunsManager:
     # dict for easier access
     runs: dict[str, Run] = {}
 
-    @staticmethod
-    def add_run(run: Run):
-        RunsManager.runs[run.uuid] = run
+    @classmethod
+    def add_run(cls, run: Run):
+        cls.runs[run.uuid] = run
     
-    @staticmethod
-    def get_run(uuid: str):
-        return RunsManager.runs.get(uuid)
+    @classmethod
+    def get_run(cls, uuid: str):
+        return cls.runs.get(uuid)
+
+    @classmethod
+    def remove_save_run(cls, uuid: str):
+        cls.runs.pop(uuid).save_to_disk()
+        

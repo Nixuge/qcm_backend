@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
+import json
 import math
+import os
 import random
 from uuid import uuid4
 
@@ -23,9 +25,24 @@ class Run:
     revealed_questions: list[int] = field(default_factory=list)
     answers_submitted: dict[int, dict] = field(default_factory=dict)
 
+    def save_to_disk(self):
+        with open(f"runs/ended/{self.uuid}.json", "w") as file:
+            json.dump({
+                "uuid": self.uuid, # redundant but might as well
+                "free_browsing": self.free_browsing,
+                "selected_themes": self.selected_themes,
+                "questions": self.questions,
+                "answers_submitted": self.answers_submitted
+            }, file, indent = 4)
+
+    # todo: have that store (& calculate?) which questions are good and which are bad
     def add_submitted_answers(self, question_number: int, answers: dict):
         self.revealed_questions.append(question_number)
         self.answers_submitted[question_number] = answers
+
+    # to test
+    def is_finished(self) -> bool:
+        return len(self.revealed_questions) == self.question_count
 
     def can_access(self, index: int) -> bool:
         if self.free_browsing or index == 0:
@@ -35,7 +52,6 @@ class Run:
             if index == discovered or index == discovered:
                 return True
         return False
-
 
     def get_question_theme(self, index: int):
         return self.questions[index][0]
@@ -125,6 +141,8 @@ class RunBuilder:
         # Count checks
         if self.question_count > BaseData.MAX_QUESTION_COUNT:
             return "Too many questions"
+        if self.question_count <= 0:
+            return "Question count <= 0"
 
         if self.selected_themes_count > self.question_count: # may be removed ?
             return "More themes than questions"

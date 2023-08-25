@@ -14,6 +14,9 @@ import routes.v1.validate_question_get_result
 # TODO: have endpoints return better values:
 # for the get_revealed_and_current_quetsions, return which questions have been revealed
 
+# TODO: 
+# idled run saving
+# retrieving ended runs
 
 from data.base_data import BaseData
 from utils.fs_utils import mkdir_if_not_exist
